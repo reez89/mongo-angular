@@ -1,0 +1,22 @@
+ul{
+  width:100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul li{
+  display: inline;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+.spacer{
+  flex: 1 1 auto;
+}
