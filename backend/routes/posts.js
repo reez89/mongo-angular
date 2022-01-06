@@ -59,6 +59,7 @@ router.post(
       title: req.body.title,
       content: req.body.content,
       imagePath: url + '/images/' + req.file.filename,
+      creator: req.userData.userId
     });
     post.save().then((createdPost) => {
       res.status(201).json({
@@ -87,19 +88,18 @@ router.put(
       title: req.body.title,
       content: req.body.content,
       imagePath: imagePath,
+      creator: req.userData.userId
     });
-
-    console.log(post);
-    Post.updateOne(
-      {
-        _id: req.params.id,
-      },
-      post
-    )
+    Post.updateOne({_id: req.params.id,creator: req.userData.userId},post)
       .exec()
       .then((result) => {
-        console.log(result);
-        res.status(200).json({ message: 'Modifica compeltata' });
+        console.log(result)
+        if (result.modifiedCount > 0){
+          res.status(200).json({ message: 'Update Successful!'})
+        }else {
+          res.status(401).json({ message: 'Update Failed!No Auth!' });
+        }
+        
       })
       .catch((err) => {
         console.log(err);
@@ -120,11 +120,13 @@ router.get('/:id', (req, res, next) => {
 router.delete('/:id', check, (req, res, next) => {
   Post.deleteOne({
     _id: req.params.id,
-  }).then((result) => {
-    console.log(result);
-    res
-      .status(200)
-      .json({ message: `Post with id ${req.params.id} number deleted!` });
+    creator: req.userData.userId
+  }).then(result => {
+    if (result.deletedCount > 0){
+      res.status(200).json({ message: 'Delete Successful!'})
+    }else {
+      res.status(401).json({ message: 'Delete Failed!No Auth!' });
+    }
   });
 });
 

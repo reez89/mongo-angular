@@ -23,11 +23,13 @@ export class PostsService {
         map((postData) => {
           return {
             posts: postData.posts.map((post) => {
+              console.log(post)
               return {
                 title: post.title,
                 content: post.content,
                 id: post._id,
                 imagePath: post.imagePath,
+                creator: post.creator
               };
             }),
             maxPosts: postData.maxPosts,
@@ -49,6 +51,7 @@ export class PostsService {
       title: string;
       content: string;
       imagePath: string;
+      creator: string;
     }>('http://localhost:4000/api/posts/' + id);
   }
 
@@ -66,7 +69,7 @@ export class PostsService {
         'http://localhost:4000/api/posts',
         postData
       )
-      .subscribe((responseData) => {
+      .subscribe(() => {
         this.router.navigate(['/']);
       });
   }
@@ -85,6 +88,7 @@ export class PostsService {
         title: title,
         content: content,
         imagePath: image,
+        creator: null
       };
     }
     this.http
