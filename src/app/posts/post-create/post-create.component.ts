@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -6,6 +6,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 import { Post } from '../post.model';
 
 import { PostsService } from '../posts.service';
@@ -17,7 +19,7 @@ import { mimeType } from './image-validator';
   templateUrl: './post-create.component.html',
   styleUrls: ['./post-create.component.css'],
 })
-export class PostCreateComponent implements OnInit {
+export class PostCreateComponent implements OnInit, OnDestroy {
   enteredTitle = '';
   enteredContent = '';
   mode = 'create';
@@ -25,15 +27,22 @@ export class PostCreateComponent implements OnInit {
   post: Post;
   isLoading = false;
   imagePreview: string;
+  private authSubscription: Subscription;
 
   form: FormGroup;
   constructor(
     public postsService: PostsService,
     public route: ActivatedRoute,
-    public fb: FormBuilder
+    public fb: FormBuilder,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
+   this.authSubscription = this.authService
+    .getAuthStatusListener()
+    .subscribe(() =>{
+      this.isLoading = false
+    })
     this.form = new FormGroup({
       title: new FormControl(null, {
         validators: [Validators.required, Validators.minLength(3)],
@@ -101,5 +110,9 @@ export class PostCreateComponent implements OnInit {
       this.imagePreview = reader.result as string; // assegna la varibile alla stringa del file caricato
     };
     reader.readAsDataURL(file); // carica il file
+  }
+
+  ngOnDestroy() {
+    this.authSubscription.unsubscribe()
   }
 }
