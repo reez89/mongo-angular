@@ -13,7 +13,7 @@ const MIME_TYPE_MAP = {
       if (isValid) {
         error = null;
       }
-      cb(error, 'backend/images'); //fa riferimento al server e non al posts.js
+      cb(error, 'images'); //fa riferimento al server e non al posts.js
     },
     filename: (req, file, cb) => {
       const name = file.originalname.toLocaleLowerCase().split(' ').join('-');

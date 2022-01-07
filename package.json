@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:server": "nodemon ./backend/server.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -22,6 +23,7 @@
     "@angular/platform-browser-dynamic": "^12.2.10",
     "@angular/router": "^12.2.10",
     "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "core-js": "^3.1.2",
     "express": "^4.17.1",

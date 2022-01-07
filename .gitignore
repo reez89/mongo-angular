@@ -38,4 +38,6 @@ testem.log
 .DS_Store
 Thumbs.db
 
-/backend/images
+#PW and JWT secret key
+nodemon.json
+
