@@ -5,11 +5,14 @@ import { map } from 'rxjs/operators';
 
 import { Post } from './post.model';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment'
 
+const BE_URL = environment.apiUrl + '/posts/';
 @Injectable({ providedIn: 'root' })
 export class PostsService {
   private posts: Post[] = [];
   private postsUpdated = new Subject<{ posts: Post[]; postCount: number }>();
+
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -17,7 +20,7 @@ export class PostsService {
     const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
     this.http
       .get<{ message: string; posts: any; maxPosts: number }>(
-        'http://localhost:4000/api/posts' + queryParams
+        BE_URL + queryParams
       )
       .pipe(
         map((postData) => {
@@ -52,7 +55,7 @@ export class PostsService {
       content: string;
       imagePath: string;
       creator: string;
-    }>('http://localhost:4000/api/posts/' + id);
+    }>(BE_URL + id);
   }
 
   getPostUpdateListener() {
@@ -66,7 +69,7 @@ export class PostsService {
     postData.append('image', image, title);
     this.http
       .post<{ message: string; post: Post }>(
-        'http://localhost:4000/api/posts',
+        BE_URL,
         postData
       )
       .subscribe(() => {
@@ -92,12 +95,12 @@ export class PostsService {
       };
     }
     this.http
-      .put('http://localhost:4000/api/posts/' + id, postData)
+      .put(BE_URL + id, postData)
       .subscribe((response) => {
         this.router.navigate(['/']);
       });
   }
   deletePost(postId: string) {
-    return this.http.delete('http://localhost:4000/api/posts/' + postId);
+    return this.http.delete(BE_URL + postId);
   }
 }
